@@ -1,25 +1,35 @@
 package com.security.test.models;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity
 public class User {
 	
+	@Id
 	String username;
 	String password;
 	String email;
+	String role;
 	
 	
 	
+	
+
+
+
 	public User() 
 	{
 		
 	}
 
-	
 
-	public User(String username, String password, String email) {
-		
+	public User(String username, String password, String email, String role) {
+		super();
 		this.username = username;
 		this.password = password;
 		this.email = email;
+		this.role = role;
 	}
 
 
@@ -58,7 +68,15 @@ public class User {
 		this.email = email;
 	} 
 	
-	
+	public String getRole() {
+		return role;
+	}
+
+
+
+	public void setRole(String role) {
+		this.role = role;
+	}
 	
 	
 

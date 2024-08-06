@@ -13,8 +13,8 @@ public class UserService {
 
 	public UserService() 
 	{
-		list.add(new User("abc","passwordabc","abc@gmail.com"));
-		list.add(new User("xyz","passwordxyz","xyz@gmail.com"));
+//		list.add(new User("abc","passwordabc","abc@gmail.com","Normal"));
+//		list.add(new User("xyz","passwordxyz","xyz@gmail.com","Admin"));
 	}
 	
 	

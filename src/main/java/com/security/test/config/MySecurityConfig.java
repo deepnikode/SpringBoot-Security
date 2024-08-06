@@ -1,5 +1,6 @@
 package com.security.test.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,12 +13,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.security.test.services.CustomUserDetailService;
+
 @Configuration
 @EnableWebSecurity
 public class MySecurityConfig {
-
+	
+	@Autowired
+	private CustomUserDetailService customUserDetailService;
+	
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public BCryptPasswordEncoder passwordEncoder() 
+    {
         return new BCryptPasswordEncoder();
     }
 
@@ -27,27 +34,20 @@ public class MySecurityConfig {
             .csrf().disable()
             .authorizeRequests(authorizeRequests ->
                 authorizeRequests
+                .requestMatchers("/signin").permitAll()
                     .requestMatchers("/public/**").hasRole("USER")
                     .requestMatchers("/users/**").hasRole("ADMIN")
                     .anyRequest().authenticated()
             )
-            .formLogin();
+            .formLogin()
+            .loginPage("/signin")
+            .loginProcessingUrl("/dologin")
+            .defaultSuccessUrl("/users/")
+            .and()
+            .userDetailsService(customUserDetailService);
         
         return http.build();
     }
 
-    @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder encoder) {
-        UserDetails admin = User.withUsername("deep")
-                .password(encoder.encode("pwd1"))
-                .roles("ADMIN")
-                .build();
-        
-        UserDetails user = User.withUsername("arti")
-                .password(encoder.encode("pwd2"))
-                .roles("USER")
-                .build();
-        
-        return new InMemoryUserDetailsManager(admin, user);
-    }
+    
 }
